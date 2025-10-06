@@ -117,7 +117,7 @@ const App = forwardRef((props, ref) => {
         current_level = area.level;
         return {
           area_type: area.type,
-          data: years.map((year) => parseFloat(area[year])),
+          data: years.map((year) => parseFloat(area[year]) * 1000),
           level: area.level,
           name: area['Region/economy'],
           parents: [...parents],
@@ -133,6 +133,7 @@ const App = forwardRef((props, ref) => {
 
   useEffect(() => {
     const data_file = (window.location.href.includes('unctad.org')) ? `https://storage.unctad.org/2025-wir_report/assets/data/2025-fdi_explorer.json?v=${uuid4()}` : `./assets/data/2025-fdi_explorer.json?v=${uuid4()}`;
+    console.log(data_file);
     try {
       fetch(data_file)
         .then((response) => {
@@ -153,7 +154,7 @@ const App = forwardRef((props, ref) => {
         align: 'left',
         margin: 15,
         style: {
-          color: 'rgba(255, 255, 255, 0.8)',
+          color: '#000',
           fontSize: '14px'
         },
         text: '<em>Source:</em> UN Trade and Development (UNCTAD), World investment report 2025<br /><em>Note:</em> The data includes financial transactions through European economies with high levels of conduit flows.',
@@ -161,7 +162,7 @@ const App = forwardRef((props, ref) => {
         x: 0
       },
       chart: {
-        backgroundColor: '#222',
+        backgroundColor: 'transparent',
         events: {
           redraw() {
             const chart = this;
@@ -175,14 +176,14 @@ const App = forwardRef((props, ref) => {
         marginTop: 40,
         resetZoomButton: {
           theme: {
-            fill: '#fff',
+            fill: '#000',
             r: 0,
             states: {
               hover: {
                 fill: '#009edb',
                 stroke: 'transparent',
                 style: {
-                  color: '#fff'
+                  color: '#000'
                 }
               }
             },
@@ -219,7 +220,7 @@ const App = forwardRef((props, ref) => {
             align: 'left',
             margin: 15,
             style: {
-              color: 'rgba(255, 255, 255, 0.8)',
+              color: 'rgba(0, 0, 0, 0.8)',
               fontSize: '14px'
             },
             text: '<em>Source:</em> UN Trade and Development (UNCTAD), World investment report 2025<br /><em>Note:</em> The data includes financial transactions through European economies with high levels of conduit flows.',
@@ -362,7 +363,7 @@ const App = forwardRef((props, ref) => {
           padding: 0,
           rotation: 0,
           style: {
-            color: '#fff',
+            color: '#000',
             fontFamily: 'Inter',
             fontSize: '14px',
             fontWeight: 400
@@ -389,7 +390,7 @@ const App = forwardRef((props, ref) => {
           padding: 0,
           rotation: 0,
           style: {
-            color: '#fff',
+            color: '#000',
             fontFamily: 'Inter',
             fontSize: '14px',
             fontWeight: 400
@@ -529,26 +530,19 @@ const App = forwardRef((props, ref) => {
   // }
 
   return (
-    <div className="app">
-      <div className="layout">
-        {
+    <div className="layout">
+      {
           // Left
         }
-        <div className="left_container">
-          {
-            // Name
-          }
-          <div className="name_container">
-            <h3>Foreign Direct Investments (FDI)</h3>
-          </div>
-          {
+      <div className="left_container">
+        {
             // Country selection
           }
-          <div className="country_selection_container">
-            <h4>Select an economy or region</h4>
-            <div className="search_container"><input type="text" placeholder="Type to search" onChange={(event) => search(event)} /></div>
-            <ul className="selection_list">
-              {
+        <div className="country_selection_container">
+          <h4>Select an economy or region</h4>
+          <div className="search_container"><input type="text" placeholder="Type to search" onChange={(event) => search(event)} /></div>
+          <ul className="selection_list">
+            {
                 // Create only when data is ready.
                 activeData && activeData.map((area, i) => (
                   <li key={area.name} style={{ marginLeft: `${(area.level - 1) * 7}px` }}>
@@ -561,20 +555,19 @@ const App = forwardRef((props, ref) => {
                   </li>
                 ))
               }
-            </ul>
-          </div>
+          </ul>
         </div>
-        {
+      </div>
+      {
           // Right
         }
-        <div className="right_container">
-          {
+      <div className="right_container">
+        {
             // Title
           }
-          <div className="title_container">
-            <h3>By region and economy, thousands of dollars, 1990–2024</h3>
-            <div className="options_container">
-              {
+        <div className="title_container">
+          <div className="options_container">
+            {
                 // <label style={{display: 'none'}}>
                 //   <span className={'input_container'}>
                 //     <input type="checkbox" value={relativeToPopulation} selected={relativeToPopulation} onChange={() => toggleRelativeToPopulation()} />
@@ -582,26 +575,26 @@ const App = forwardRef((props, ref) => {
                 //   <span className={'label_container'}>Relative to Population</span>
                 // </label>
               }
-              {/*              <span className="input_container">
+            {/*              <span className="input_container">
                 <button onClick={(event) => toggleLinearLogarithmicScale(event, 'linear')} className="linearlogarithmic selected" title="Use linear scale on y-axis" aria-label="Use linear scale on y-axis" type="button">Linear</button>
               </span> */}
-              {/*              <span className="input_container">
+            {/*              <span className="input_container">
                 <button onClick={(event) => toggleLinearLogarithmicScale(event, 'logarithmic')} className="linearlogarithmic" title="Use logarithmic scale on y-axis" aria-label="Use logarithmic scale on y-axis" type="button">Log</button>
               </span> */}
-              {/* <span className="button_group" /> */}
-              <span className="input_container">
-                <button onClick={(event) => changeDataType(event, 'fdi_inflows')} className="data_type selected" title="Select FDI inflows dataset" aria-label="Select FDI inflows dataset" type="button">Inflows</button>
-              </span>
-              <span className="input_container">
-                <button onClick={(event) => changeDataType(event, 'fdi_outflows')} className="data_type" title="Select FDI outflows dataset" aria-label="Select FDI outflows dataset" type="button">Outflows</button>
-              </span>
-            </div>
+            {/* <span className="button_group" /> */}
+            <span className="input_container">
+              <button onClick={(event) => changeDataType(event, 'fdi_inflows')} className="data_type selected" title="Select FDI inflows dataset" aria-label="Select FDI inflows dataset" type="button">Inflows</button>
+            </span>
+            <span className="input_container">
+              <button onClick={(event) => changeDataType(event, 'fdi_outflows')} className="data_type" title="Select FDI outflows dataset" aria-label="Select FDI outflows dataset" type="button">Outflows</button>
+            </span>
           </div>
-          <div className="chart_container">
-            <div className="info" style={{ display: Object.values(selected).reduce((a, item) => a + item, 0) > 0 ? 'none' : 'flex' }}><h3>Select at least one economy or region from the left</h3></div>
-            <div className="highchart_container" id="highchart-container" style={{ display: Object.values(selected).reduce((a, item) => a + item, 0) > 0 ? 'block' : 'none' }} />
-            <div className="legend_container">
-              {
+        </div>
+        <div className="chart_container">
+          <div className="info" style={{ display: Object.values(selected).reduce((a, item) => a + item, 0) > 0 ? 'none' : 'flex' }}><h3>Select at least one economy or region from the left</h3></div>
+          <div className="highchart_container" id="highchart-container" style={{ display: Object.values(selected).reduce((a, item) => a + item, 0) > 0 ? 'block' : 'none' }} />
+          <div className="legend_container">
+            {
                 legend && legend.map(legend_item => (
                   <button key={uuid4()} style={{ color: legend_item.color }} onClick={() => chooseActiveData(legend_item)} title={`Remove ${legend_item.name} from the chart`} aria-label={`Remove ${legend_item.name} from the chart`} type="button">
                     {legendIcon(legend_item.symbol, legend_item.color)}
@@ -609,11 +602,9 @@ const App = forwardRef((props, ref) => {
                   </button>
                 ))
               }
-            </div>
           </div>
         </div>
       </div>
-      <noscript>Your browser does not support JavaScript!</noscript>
     </div>
   );
 });
