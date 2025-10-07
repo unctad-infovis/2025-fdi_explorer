@@ -133,7 +133,6 @@ const App = forwardRef((props, ref) => {
 
   useEffect(() => {
     const data_file = (window.location.href.includes('unctad.org')) ? `https://storage.unctad.org/2025-wir_report/assets/data/2025-fdi_explorer.json?v=${uuid4()}` : `./assets/data/2025-fdi_explorer.json?v=${uuid4()}`;
-    console.log(data_file);
     try {
       fetch(data_file)
         .then((response) => {
@@ -207,6 +206,7 @@ const App = forwardRef((props, ref) => {
         enabled: false
       },
       exporting: {
+        enabled: false,
         buttons: {
           contextButton: {
             menuItems: ['viewFullscreen', 'separator', 'downloadPNG', 'downloadPDF', 'separator', 'downloadCSV'],
@@ -230,8 +230,6 @@ const App = forwardRef((props, ref) => {
           chart: {
             events: {
               load() {
-                const chart = this;
-                chart.renderer.image('https://static.dwcdn.net/custom/themes/unctad-2024-rebrand/Blue%20arrow.svg', 15, 15, 44, 43.88).add();
               }
             },
             height: 600,
